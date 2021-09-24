@@ -1222,8 +1222,8 @@ main(int argc, char *argv[])
             {
                 if (!eswitch) fprintf(outfile,"%d\n",n);
             }
-            else fprintf(outfile,"\nGraph %ld, order %d.\n",
-                                 pval1+nin-1,n);
+            else ;/*fprintf(outfile,"\nGraph %ld, order %d.\n",
+                                 pval1+nin-1,n);*/
             if (aswitch|Aswitch)
                 putam(outfile,g,linelength,Aswitch,tswitch,m,n);
             else if (eswitch)
