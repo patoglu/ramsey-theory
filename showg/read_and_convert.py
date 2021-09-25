@@ -1,16 +1,24 @@
-import sys
-fileName = sys.argv[-1]
-file = open(fileName, 'r')
- 
+'''
+Written by Yusuf Patoglu
+25.09.2021
 
- 
-def initMatrix(theFile):
+Reads showg's output as adjacency form and converts it to adjacency list form that is acceptable by fmc package.
+
+'''
+import sys
+fileName = sys.argv[-2]
+inputFile = open(fileName, 'r')
+fileName = sys.argv[-1]
+outputFile = open(fileName, 'w')
+
+#Read from showg's output and create the adjacency matrix graph.
+def initMatrix(filePointer):
     matrix = []
     row = []
     while 1:
          
         # read by character
-        char = file.read(1)
+        char = filePointer.read(1)
         if char == '\n':
             matrix.append(row)
             row = []
@@ -19,21 +27,43 @@ def initMatrix(theFile):
         if not char:
             break
        
-    file.close()
+    filePointer.close()
     return matrix
 
-def getAdjacencyList(theMatrix):
+#Convert from adjacency
+def printAdjacencyListToFile(theMatrix, filePointer):
+
+    
+    
+    redEdgeCount = 0 #Red edges are 1.
+    #print("%%MatrixMarket matrix coordinate pattern symmetric")
     n = len(theMatrix)
     for i in range (0, n):
         for j in range(0, i + 1):
-            #print(theMatrix[i][j] , end='')
-            if theMatrix[i][j] == '1':
-                print(i + 1, " - ", j + 1)
-            
-        print("")
+            if theMatrix[i][j] == '0':
+                print(i + 1, j + 1, file = filePointer)
+                redEdgeCount += 1
 
+    
+    
+    
+    
+    tempFilePointer = open("temp", 'w+')
+    print("%%MatrixMarket matrix coordinate pattern symmetric", file = tempFilePointer)
+    print(n, n, redEdgeCount, file = tempFilePointer)
+    filenames = [tempFilePointer.name, filePointer.name]
+    filePointer.close()
+    tempFilePointer.close()
 
-matrix = initMatrix(file)
+    with open('original.txt', 'w') as outfile:
+        for fname in filenames:
+            with open(fname) as infile:
+                outfile.write(infile.read())
+                
+ 
+        
+    
+matrix = initMatrix(inputFile)
 print(matrix)
-getAdjacencyList(matrix)
+printAdjacencyListToFile(matrix, outputFile)
 
